@@ -90,10 +90,11 @@ const tokenize = (input) => {
       case " ":
         flush();
         return loop(progressiveScope, restOfGraphemes);
-      case "(":
+      case "(": {
         const newScope = [];
         progressiveScope[0].push(newScope);
         return loop([newScope, ...progressiveScope], restOfGraphemes);
+      }
       case ")":
         flush();
         return loop(progressiveScope.slice(1), restOfGraphemes);

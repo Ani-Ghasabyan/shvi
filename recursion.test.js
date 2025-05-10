@@ -58,10 +58,15 @@ Deno.test("Recursion", async (t) => {
         return loop(str, "");
       };
 
+<<<<<<< HEAD
       const generalResult = reverseCapitalize("BetTeR SafE ThaN SoRry");
       const emptyStringResult = reverseCapitalize("");
       assertEquals(generalResult, "bETtEr sAFe tHAn sOrRY");
       assertEquals(emptyStringResult, "");
+=======
+      const result = reverseCapitalize("BetTeR SafE ThaN SoRry");
+      assertEquals(result, "bETtEr sAFe tHaN sOrrY");
+>>>>>>> 61b16fe (:construction: setup for step 03)
     },
   });
 
