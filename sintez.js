@@ -74,7 +74,7 @@ const tokenize = (input) => {
   const loop = (
     progressiveScope,
     [graphemeAtHand, ...restOfGraphemes],
-    tokenSoFar = ""
+    tokenSoFar = "",
   ) => {
     const flush = () => {
       if (tokenSoFar.trim() === "") return;
@@ -98,7 +98,11 @@ const tokenize = (input) => {
         flush();
         return loop(progressiveScope.slice(1), restOfGraphemes);
       default:
-        return loop(progressiveScope, restOfGraphemes, tokenSoFar + graphemeAtHand);
+        return loop(
+          progressiveScope,
+          restOfGraphemes,
+          tokenSoFar + graphemeAtHand,
+        );
     }
   };
 
@@ -120,7 +124,7 @@ const evaluate = (expression) => {
       const [freq, duration] = args.map(evaluate);
       return generatePCM(freq, duration);
     } else {
-      throw new TypeError('Unknown function');
+      throw new TypeError("Unknown function");
     }
   }
   return expression;
