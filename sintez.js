@@ -9,7 +9,13 @@ export { encodeWAV, generatePCM };
 //   n: Sample number (integer), from 0 to R × duration − 1
 
 function generatePCM(frequency, duration) {
-  throw new Error("Not implemented");
+  const amplitude = 32767;
+  const rate = 44100;
+  const sample = [];
+  for (let n = 0; n < (rate * duration - 1) / 1000; n++) {
+    sample[n] = amplitude * Math.sin(2 * Math.PI * frequency * n / rate);
+  }
+  return sample;
 }
 
 async function encodeWAV(
