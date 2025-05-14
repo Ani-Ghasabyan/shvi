@@ -10,18 +10,12 @@ export { encodeWAV, generatePCM, tokenize };
 
 function generatePCM(frequency, duration) {
   const amplitude = 32767;
-  const sampleRate = 44100;
-
-  const numSamples = Math.floor(sampleRate * (duration / 1000));
-
-  const samples = [];
-  for (let i = 0; i < numSamples; i++) {
-    const t = i / sampleRate;
-    const sample = amplitude * Math.sin(2 * Math.PI * frequency * t);
-    samples.push(sample);
+  const rate = 44100;
+  const sample = [];
+  for (let n = 0; n < (rate * duration - 1) / 1000; n++) {
+    sample[n] = amplitude * Math.sin(2 * Math.PI * frequency * n / rate);
   }
-
-  return samples;
+  return sample;
 }
 
 async function encodeWAV(
