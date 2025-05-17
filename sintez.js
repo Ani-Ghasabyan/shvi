@@ -58,8 +58,6 @@ async function encodeWAV(
   );
 }
 
-const atom = (name) => Symbol.for(name);
-
 const typeify = (token) => {
   if (!isNaN(Number(token))) {
     return Number(token);
@@ -67,6 +65,8 @@ const typeify = (token) => {
     return atom(token);
   }
 };
+
+const atom = (name) => Symbol.for(name);
 
 const tokenize = (input) => {
   const graphemes = Array.from(input.trim());
@@ -111,14 +111,10 @@ const tokenize = (input) => {
 };
 
 const evaluate = (expression) => {
-  // If the expression is a number, return it
-  // If it is an array,
-  //   assume the first element is a function and the rest are arguments
-  //   evaluate the function with the arguments
-
   if (typeof expression === "number") {
     return expression;
   }
+
   if (Array.isArray(expression)) {
     const [fn, ...args] = expression;
     if (fn === typeify("tone")) {
