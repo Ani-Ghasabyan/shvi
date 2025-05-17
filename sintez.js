@@ -24,7 +24,8 @@ function generatePCM(frequency, duration) {
       fadeMultiplier = (totalSamples - n) / fadeSamples;
     }
 
-    sample[n] = amplitude * fadeMultiplier * Math.sin(2 * Math.PI * frequency * n / rate);
+    sample[n] = amplitude * fadeMultiplier *
+      Math.sin(2 * Math.PI * frequency * n / rate);
   }
 
   return sample;
@@ -89,10 +90,6 @@ const typeify = (token) => {
 };
 
 const atom = (name) => Symbol.for(name);
-
-const typeify = (token) => {
-  throw new Error("Not implemented");
-};
 
 const tokenize = (input) => {
   const graphemes = Array.from(input.trim());
