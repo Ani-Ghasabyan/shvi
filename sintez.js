@@ -11,17 +11,33 @@ export { encodeWAV, evaluate, generatePCM, tokenize, typeify };
 function generatePCM(frequency, duration) {
   const amplitude = 32767;
   const rate = 44100;
+  const totalSamples = Math.floor(rate * duration / 1000);
+  const fadeSamples = totalSamples / 10;
   const sample = [];
-  for (let n = 0; n < rate * duration / 1000; n++) {
-    sample[n] = amplitude * Math.sin(2 * Math.PI * frequency * n / rate);
+
+  for (let n = 0; n < totalSamples; n++) {
+    let fadeMultiplier = 1;
+
+    if (n < fadeSamples) {
+      fadeMultiplier = n / fadeSamples;
+    } else if (n > totalSamples - fadeSamples) {
+      fadeMultiplier = (totalSamples - n) / fadeSamples;
+    }
+
+    sample[n] = amplitude * fadeMultiplier * Math.sin(2 * Math.PI * frequency * n / rate);
   }
+
   return sample;
 }
 
 function sequence(...PCMs) {
-  throw new Error(
-    "🪈 The `sequence` function is not implemented yet.",
-  );
+  const result = [];
+
+  for (const pcm of PCMs) {
+    result.push(...pcm);
+  }
+
+  return result;
 }
 
 async function encodeWAV(
@@ -123,9 +139,12 @@ const evaluate = (expression) => {
 
   if (Array.isArray(expression)) {
     const [fn, ...args] = expression;
-    if (fn === typeify("tone")) {
+    if (fn === atom("tone")) {
       const [freq, duration] = args.map(evaluate);
       return generatePCM(freq, duration);
+    } else if (fn === atom("sequence")) {
+      const pcms = args.map(evaluate);
+      return sequence(...pcms);
     } else {
       throw new TypeError("Unknown function");
     }
