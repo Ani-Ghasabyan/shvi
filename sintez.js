@@ -12,7 +12,7 @@ function generatePCM(frequency, duration) {
   const amplitude = 32767;
   const rate = 44100;
   const sample = [];
-  for (let n = 0; n < (rate * duration - 1) / 1000; n++) {
+  for (let n = 0; n < rate * duration / 1000; n++) {
     sample[n] = amplitude * Math.sin(2 * Math.PI * frequency * n / rate);
   }
   return sample;
@@ -61,7 +61,11 @@ async function encodeWAV(
 const atom = (name) => Symbol.for(name);
 
 const typeify = (token) => {
-  throw new Error("Not implemented");
+  if (!isNaN(Number(token))) {
+    return Number(token);
+  } else {
+    return atom(token);
+  }
 };
 
 const tokenize = (input) => {
@@ -70,9 +74,32 @@ const tokenize = (input) => {
   const loop = (
     progressiveScope,
     [graphemeAtHand, ...restOfGraphemes],
-    tokenSoFar = "",
+    tokenSoFar = ""
   ) => {
-    throw new Error("Not implemented");
+    const flush = () => {
+      if (tokenSoFar.trim() === "") return;
+      progressiveScope[0].push(typeify(tokenSoFar));
+    };
+
+    if (graphemeAtHand === undefined) {
+      flush();
+      return progressiveScope[0];
+    }
+
+    switch (graphemeAtHand) {
+      case " ":
+        flush();
+        return loop(progressiveScope, restOfGraphemes);
+      case "(":
+        const newScope = [];
+        progressiveScope[0].push(newScope);
+        return loop([newScope, ...progressiveScope], restOfGraphemes);
+      case ")":
+        flush();
+        return loop(progressiveScope.slice(1), restOfGraphemes);
+      default:
+        return loop(progressiveScope, restOfGraphemes, tokenSoFar + graphemeAtHand);
+    }
   };
 
   return loop([[]], graphemes);
@@ -84,5 +111,17 @@ const evaluate = (expression) => {
   //   assume the first element is a function and the rest are arguments
   //   evaluate the function with the arguments
 
-  throw new Error("Not implemented");
+  if (typeof expression === "number") {
+    return expression;
+  }
+  if (Array.isArray(expression)) {
+    const [fn, ...args] = expression;
+    if (fn === atom("tone")) {
+      const [freq, duration] = args.map(evaluate);
+      return generatePCM(freq, duration);
+    } else {
+      throw new TypeError('Unknown function');
+    }
+  }
+  return expression;
 };

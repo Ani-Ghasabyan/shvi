@@ -44,7 +44,7 @@ Deno.test("Playing things", async (t) => {
     name: "playing a D4 for two seconds",
     fn: async () => {
       const music = `
-            (tone 293.66 200)
+            (tone 293.66 2000)
           `;
 
       const tokens = tokenize(music);

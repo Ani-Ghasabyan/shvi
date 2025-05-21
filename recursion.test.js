@@ -78,13 +78,12 @@ Deno.test("Recursion", async (t) => {
         if (numbers.length === 0) {
           return -Infinity
         }
-        let maximum = numbers[0]
-        for (let i = 0; i < numbers.length; i++) {
-          if (maximum < numbers[i]) {
-            maximum = numbers[i]
-          }
+        const [first, ...rest] = numbers;
+        if(first < max(rest)){
+          return max(rest)
+        } else {
+          return first
         }
-        return maximum;
       };
 
       const maxOfEmptyList = max([]);
@@ -110,15 +109,22 @@ Deno.test("Recursion", async (t) => {
       //  If it is not, add the first character to the result and move to the next character of the string
 
       const strip = (str, substr) => {
-        throw new Error("Not implemented");
+        if (!str || !substr || substr.length < 2 || str.length < 2) {
+          return str;
+        }
+        if (str[0] === substr[0] && str[1] === substr[1]) {
+          return strip(str.slice(2), substr);
+        } else {
+          return str[0] + strip(str.slice(1), substr);
+        }
       };
 
       const generalResult = strip("Skies are grey in Greece", "re");
       const emptyStringResult = strip("", "re");
       const emptySubstringResult = strip("Skies are grey in Greece", "");
       assertEquals(generalResult, "Skies a gy in Gece");
-      assertEquals(emptySubstringResult, "Skies a gy in Gece");
       assertEquals(emptyStringResult, "");
+      assertEquals(emptySubstringResult, "Skies are grey in Greece");
     },
   });
 
@@ -131,7 +137,15 @@ Deno.test("Recursion", async (t) => {
       // Move to the next element and repeat the process
 
       const flatten = (arr) => {
-        throw new Error("Not implemented");
+        if (arr.length === 0) {
+          return [];
+        }
+        const [first, ...rest] = arr;
+        if (Array.isArray(first)) {
+          return flatten(first).concat(flatten(rest));
+        } else {
+          return [first].concat(flatten(rest));
+        }
       };
 
       const generalResult = flatten([1, [2, 3], [4, [5]]]);

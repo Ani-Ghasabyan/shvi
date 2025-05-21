@@ -40,12 +40,7 @@ Deno.test("Tokenizer", async (t) => {
     name: "tokenize Shvi code",
     fn: () => {
       const result = tokenize("tone 261.63 1000");
-
-      assertEquals(result, [
-        atom("tone"),
-        261.63,
-        1000,
-      ]);
+      assertEquals(result, [atom("tone"), 261.63, 1000]);
     },
   });
 
@@ -60,9 +55,8 @@ Deno.test("Tokenizer", async (t) => {
   await t.step({
     name: "tokenize a nested list",
     fn: () => {
-      fail(
-        "This test is not implemented yet. Please implement it.",
-      );
+      const result = tokenize("(a (b 2))");
+      assertEquals(result, [[atom("a"), [atom("b"), 2]]]);
     },
   });
 });
