@@ -9,12 +9,12 @@ Deno.test("Recursion", async (t) => {
       // Otherwise, return the sum of the previous two Fibonacci numbers
 
       const fibonacci = (n) => {
-        if(n === 0){
-          return 0
-        } else if(n === 1){
-          return 1
-        } else{
-          return fibonacci(n - 1) + fibonacci(n - 2)
+        if (n === 0) {
+          return 0;
+        } else if (n === 1) {
+          return 1;
+        } else {
+          return fibonacci(n - 1) + fibonacci(n - 2);
         }
       };
 
@@ -45,28 +45,22 @@ Deno.test("Recursion", async (t) => {
           }
           const [first, ...rest] = str;
           if (first === first.toLowerCase()) {
-            acc += first.toUpperCase()
+            acc += first.toUpperCase();
           } else if (first === first.toUpperCase()) {
-            acc += first.toLowerCase()
+            acc += first.toLowerCase();
           } else {
-            console.log("not a char")
+            console.log("not a char");
           }
-          return loop(rest, acc)
-          
+          return loop(rest, acc);
         };
 
         return loop(str, "");
       };
 
-<<<<<<< HEAD
       const generalResult = reverseCapitalize("BetTeR SafE ThaN SoRry");
       const emptyStringResult = reverseCapitalize("");
       assertEquals(generalResult, "bETtEr sAFe tHAn sOrRY");
       assertEquals(emptyStringResult, "");
-=======
-      const result = reverseCapitalize("BetTeR SafE ThaN SoRry");
-      assertEquals(result, "bETtEr sAFe tHaN sOrrY");
->>>>>>> 61b16fe (:construction: setup for step 03)
     },
   });
 
@@ -81,13 +75,13 @@ Deno.test("Recursion", async (t) => {
 
       const max = (numbers) => {
         if (numbers.length === 0) {
-          return -Infinity
+          return -Infinity;
         }
         const [first, ...rest] = numbers;
-        if(first < max(rest)){
-          return max(rest)
+        if (first < max(rest)) {
+          return max(rest);
         } else {
-          return first
+          return first;
         }
       };
 
