@@ -116,7 +116,7 @@ const evaluate = (expression) => {
   }
   if (Array.isArray(expression)) {
     const [fn, ...args] = expression;
-    if (fn === atom("tone")) {
+    if (fn === typeify("tone")) {
       const [freq, duration] = args.map(evaluate);
       return generatePCM(freq, duration);
     } else {
