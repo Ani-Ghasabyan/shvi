@@ -41,6 +41,12 @@ function sequence(...PCMs) {
   return result;
 }
 
+function sequence(...PCMs) {
+  throw new Error(
+    "🪈 The `sequence` function is not implemented yet.",
+  );
+}
+
 async function encodeWAV(
   samples,
   output = "output.wav",
