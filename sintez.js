@@ -1,5 +1,8 @@
 export { encodeWAV, evaluate, generatePCM, tokenize, typeify };
 
+const AMPLITUDE = 32767;
+const SAMPLE_RATE = 44100;
+
 // sample[n]= A ⋅ sin(2 * π * f * (n / R)​)
 
 // Where:
@@ -41,10 +44,14 @@ function sequence(...PCMs) {
   return result;
 }
 
-function sequence(...PCMs) {
-  throw new Error(
-    "🪈 The `sequence` function is not implemented yet.",
-  );
+function sequence(...tones) {
+  const samples = [];
+  for (const tone of tones) {
+    for (const PCM of tone) {
+      samples.push(PCM);
+    }
+  }
+  return samples;
 }
 
 async function encodeWAV(
@@ -152,6 +159,8 @@ const evaluate = (expression) => {
     } else if (fn === atom("sequence")) {
       const pcms = args.map(evaluate);
       return sequence(...pcms);
+    } else if (fn === atom("parallel")) {
+      throw new Error("TBI");
     } else {
       throw new TypeError("Unknown function");
     }
