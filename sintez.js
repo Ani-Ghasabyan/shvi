@@ -1,4 +1,4 @@
-export { encodeWAV, evaluate, generatePCM, tokenize, typeify };
+export { encodeWAV, evaluate, generatePCM, run, tokenize, typeify };
 
 const AMPLITUDE = 32767;
 const SAMPLE_RATE = 44100;
@@ -44,14 +44,16 @@ function sequence(...PCMs) {
   return result;
 }
 
-function sequence(...tones) {
-  const samples = [];
-  for (const tone of tones) {
-    for (const PCM of tone) {
-      samples.push(PCM);
-    }
-  }
-  return samples;
+function sequence(...PCMs) {
+  const totalSamples = PCMs.reduce((acc, pcm) => acc + pcm.length, 0);
+  const combinedSamples = new Int16Array(totalSamples);
+
+  PCMs.reduce((offset, pcm) => {
+    combinedSamples.set(pcm, offset);
+    return offset + pcm.length;
+  }, 0);
+
+  return combinedSamples;
 }
 
 async function encodeWAV(
@@ -166,4 +168,10 @@ const evaluate = (expression) => {
     }
   }
   return expression;
+};
+
+const run = (input) => {
+  const tokens = tokenize(input);
+  const expression = tokens[0];
+  return evaluate(expression);
 };
