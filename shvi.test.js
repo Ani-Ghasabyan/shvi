@@ -21,7 +21,7 @@ const play = async (filePath) => {
   }).spawn();
 
   await process.output();
-  Deno.removeSync(filePath);
+  // Deno.removeSync(filePath);
 };
 
 Deno.test("Playing things", async (t) => {
@@ -37,7 +37,7 @@ Deno.test("Playing things", async (t) => {
 
       console.log("Playing generated WAV file...");
       await play("output.wav");
-      Deno.removeSync("output.wav");
+      // Deno.removeSync("output.wav");
     },
     ignore: true,
   });
@@ -56,7 +56,7 @@ Deno.test("Playing things", async (t) => {
 
       console.log("Playing generated WAV file...");
       await play("output.wav");
-      Deno.removeSync("output.wav");
+      // Deno.removeSync("output.wav");
     },
     ignore: true,
   });
@@ -66,7 +66,8 @@ Deno.test("Playing things", async (t) => {
       "playing an F4 for one second, a C4 for two seconds, and a G4 for one second",
     fn: async () => {
       const music = `
-                  (sequence (tone 349.23 1000) (tone 261.63 2000) (tone 392.00 1000))
+                  (sequence 
+                    (tone 349.23 1000) (tone 261.63 2000) (tone 392.00 1000))
               `;
 
       const tokens = tokenize(music);
@@ -76,9 +77,9 @@ Deno.test("Playing things", async (t) => {
 
       console.log("Playing generated WAV file...");
       await play("output.wav");
-      Deno.removeSync("output.wav");
+      // Deno.removeSync("output.wav");
     },
-    ignore: true,
+    ignore: false,
   });
 
   await t.step({
@@ -86,7 +87,9 @@ Deno.test("Playing things", async (t) => {
     fn: async () => {
       const music = `
                   (parallel
-                    (tone 261.63 2000) (tone 329.63 2000) (tone 392.00 2000))
+                    (tone 261.63 2000) 
+                    (tone 329.63 2000) 
+                    (tone 392.00 2000))
               `;
 
       const tokens = tokenize(music);
@@ -96,7 +99,7 @@ Deno.test("Playing things", async (t) => {
 
       console.log("Playing generated WAV file...");
       await play("output.wav");
-      Deno.removeSync("output.wav");
+      // Deno.removeSync("output.wav");
     },
     ignore: false,
   });

@@ -1,8 +1,5 @@
 export { encodeWAV, evaluate, generatePCM, run, tokenize, typeify };
 
-const AMPLITUDE = 32767;
-const SAMPLE_RATE = 44100;
-
 // sample[n]= A ⋅ sin(2 * π * f * (n / R)​)
 
 // Where:
@@ -42,18 +39,6 @@ function sequence(...PCMs) {
   }
 
   return result;
-}
-
-function sequence(...PCMs) {
-  const totalSamples = PCMs.reduce((acc, pcm) => acc + pcm.length, 0);
-  const combinedSamples = new Int16Array(totalSamples);
-
-  PCMs.reduce((offset, pcm) => {
-    combinedSamples.set(pcm, offset);
-    return offset + pcm.length;
-  }, 0);
-
-  return combinedSamples;
 }
 
 async function encodeWAV(
@@ -126,6 +111,9 @@ const tokenize = (input) => {
 
     switch (graphemeAtHand) {
       case " ":
+      case "\n":
+      case "\r":
+      case "\t":
         flush();
         return loop(progressiveScope, restOfGraphemes);
       case "(": {
@@ -162,7 +150,21 @@ const evaluate = (expression) => {
       const pcms = args.map(evaluate);
       return sequence(...pcms);
     } else if (fn === atom("parallel")) {
-      throw new Error("TBI");
+      const pcms = args.map(evaluate);
+      const maxLength = Math.max(...pcms.map((pcm) => pcm.length));
+      const result = new Array(maxLength).fill(0);
+      for (let i = 0; i < maxLength; i++) {
+        let sum = 0;
+        let count = 0;
+        for (const pcm of pcms) {
+          if (i < pcm.length) {
+            sum += pcm[i];
+            count++;
+          }
+        }
+        result[i] = count > 0 ? sum / count : 0;
+      }
+      return result;
     } else {
       throw new TypeError("Unknown function");
     }
